@@ -35,6 +35,9 @@ Greedy_heuristic <-function(x, W){
 }
 
 
+
+
+
 test <- knapsack_objects[1:800,]
 val_per_w <- test$v / test$w
 test$val_per_w <- val_per_w
