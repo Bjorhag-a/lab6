@@ -9,4 +9,6 @@ Description: Assignment for lab 6 in Advanced R programming.
 License: GPL-3 + file LICENSE
 Depends: 
     R (>= 3.5.0)
-
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
