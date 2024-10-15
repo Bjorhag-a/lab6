@@ -14,6 +14,7 @@ knapsack_objects <-
 
 greedy_knapsack <-function(x, W){
   
+  #Transform data and sort them so the for loop works as it should. 
   val_per_w <- x$v / x$w
   x$val_per_w <- val_per_w
   x <- x[order(x$val_per_w, decreasing = T), ]
@@ -24,7 +25,7 @@ greedy_knapsack <-function(x, W){
   elements <- c()
   
   
-  
+  #For loop adds the val per w till the weight retch the limit set.
   for (i in 1:n) {
     
     if (sum(total_w) + x[i, 1] < W) {
@@ -33,19 +34,18 @@ greedy_knapsack <-function(x, W){
       total_w <- total_w + x[i, 1]
       
     } else {
-      names(x)[i]
       break
     }
-    
+    elements <- c(elements, as.numeric(row.names(x)[i]))
   }
+  print(elements)
   
-  print(total_w)
-  return(list(value = total_v))
+  return(list(value = total_v, elements = elements))
   
 }
 
 greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
-
+greedy_knapsack(x = knapsack_objects[1:1200,], W = 2000)
 
 
 test <- knapsack_objects[1:800,]
@@ -63,10 +63,9 @@ for (i in 1:800) {
   
   if (sum(total_w) < W) {
     
-    print(sum(total_v))
   }
   
 }
+t <- c(1, 2, 4, 6, 7)
 
-greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
-greedy_knapsack(x = knapsack_objects[1:1200,], W = 2000)
+
