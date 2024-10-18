@@ -49,28 +49,9 @@ greedy_knapsack <-function(x, W){
   
 }
 
+system.time(gk <- greedy_knapsack(x = knapsack_objects[1:16,], W = 2000))
+
 greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
 greedy_knapsack(x = knapsack_objects[1:1200,], W = 2000)
 greedy_knapsack(x = knapsack_objects[1:8,], W = 3500)
-
-test <- knapsack_objects[1:800,]
-val_per_w <- test$v / test$w
-test$val_per_w <- val_per_w
-test <- test[order(val_per_w, decreasing = T), ]
-test[1, 3]
-total_v <- 0
-total_w <- 0
-W <- 3500
-for (i in 1:800) {
-  
-  total_v <- total_v + test[i, 3]
-  total_w <- total_w + test[i, 1]
-  
-  if (sum(total_w) < W) {
-    
-  }
-  
-}
-t <- c(1, 2, 4, 6, 7)
-
 

@@ -60,4 +60,5 @@ knapsack_dynamic <- function(x, W){
   return(list(value=m[n,W], elements=combination))
 }
 
-knapsack_dynamic(knapsack_objects[1:8,], 3600)
+system.time(gk <- knapsack_dynamic(x = knapsack_objects[1:500,], W = 2000))
+knapsack_dynamic(knapsack_objects[1:8,], 3500)
