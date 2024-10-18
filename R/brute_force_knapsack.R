@@ -122,7 +122,7 @@ brute_force_knapsack(x = knapsack_objects[1:12,], W = 3500)
 brute_force_knapsack(x = knapsack_objects[1:8,], W = 2000)
 brute_force_knapsack(x = knapsack_objects[1:12,], W = 2000)
 brute_force_knapsack(x = knapsack_objects[1:16,], W = 2000)
-
+brute_force_knapsack(x = knapsack_objects[1:16,], W = 2000, fast=TRUE)
 
 
 optimized_brute_force_knapsack <- function(x, W){
