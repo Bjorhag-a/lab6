@@ -10,16 +10,83 @@ knapsack_objects <-
     v=runif(n = n, 0, 10000)
   )
 
-#TODO suppress warnings for RNG
 
-greedy_knapsack <-function(x, W){
+
+greedy_knapsack <-function(x, W, fast=FALSE){
   
   # check input data types
   stopifnot(is.data.frame(x), is.numeric(W), W > 0)
   # check for correct column names and only positive values
   stopifnot(all(which(x$w > 0)), all(which(x$v > 0)))
   
-  #Transform data and sort them so the for loop works as it should. 
+  v <- x$v
+  w <- x$w
+  
+  if (fast==FALSE) {
+    #Transform data and sort them so the for loop works as it should. 
+    val_per_w <- v / w
+    x$val_per_w <- val_per_w
+    x <- x[order(x$val_per_w, decreasing = T), ]
+    
+    total_v <- 0
+    total_w <- 0
+    n <- nrow(x)
+    elements <- c()
+    
+    
+    #For loop adds the val per w till the weight reatch the limit set.
+    for (i in 1:n) {
+      
+      if (sum(total_w) + x[i, 1] < W) {
+        total_v <- total_v + x[i, 2]
+        #print(total_v)
+        total_w <- total_w + x[i, 1]
+        
+      } else {
+        break
+      }
+      elements <- c(elements, as.numeric(row.names(x)[i]))
+    }
+  }
+  
+  else {
+    
+  }
+  
+  
+  #print(elements)
+  
+  return(list(value = total_v, elements = elements))
+  
+}
+
+system.time(gk <- greedy_knapsack(x = knapsack_objects[1:16,], W = 2000))
+
+greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
+greedy_knapsack(x = knapsack_objects[1:1200,], W = 2000)
+greedy_knapsack(x = knapsack_objects[1:8,], W = 3500)
+
+
+
+
+
+
+
+
+
+#install.packages("profvis")
+library(profvis)
+
+
+p <- profvis(greedy_knapsack(x = knapsack_objects[1:1200,], W = 3500))
+
+p
+
+
+profvis({
+  x <- knapsack_objects[1:1200,]
+  W <- 3500
+  
   val_per_w <- x$v / x$w
   x$val_per_w <- val_per_w
   x <- x[order(x$val_per_w, decreasing = T), ]
@@ -43,15 +110,4 @@ greedy_knapsack <-function(x, W){
     }
     elements <- c(elements, as.numeric(row.names(x)[i]))
   }
-  #print(elements)
-  
-  return(list(value = total_v, elements = elements))
-  
-}
-
-system.time(gk <- greedy_knapsack(x = knapsack_objects[1:16,], W = 2000))
-
-greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
-greedy_knapsack(x = knapsack_objects[1:1200,], W = 2000)
-greedy_knapsack(x = knapsack_objects[1:8,], W = 3500)
-
+})
