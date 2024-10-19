@@ -12,6 +12,48 @@ knapsack_objects <-
 
 library("Rcpp")
 
+#' @title Greedy heuristic Knapsack problem solver
+#' @description
+#' This function solves the knapsack problem using the greedy algorithm. The algorithm selects 
+#' 
+#'
+#' @param x A data frame with two variables, the value of the item and the weight of the item. 
+#' @param W A numeric number that sets the total weight capacity of the knapsack and must be greater than 0
+#' @param fast logical, Set to TRUE and a fast C++ implementation calculates the
+#'   algorithm. Default is FALSE 
+#'
+#' @returns A list of the selected items total value and a vector of the selected items observation number
+#' @export
+#' 
+#' @importFrom Rcpp cppFunction
+#'
+#' @examples 
+#' Example with a dataset
+#' RNGversion(min(as.character(getRversion()),"3.5.3"))
+#' ##old sampler used for backward compatibility
+## suppressWarnings() can be used so that the above warning is not displayed
+#' set.seed(42, kind = "Mersenne-Twister", normal.kind = "Inversion")
+#' n <- 2000
+#' knapsack_objects <-
+#' data.frame(
+#'  w=sample(1:4000, size = n, replace = TRUE),
+#' v=runif(n = n, 0, 10000)
+#' )
+#' 
+#' No C++ implementation example
+#' greedy_knapsack(x = knapsack_objects[1:8,], W = 3500, fast = FALSE)
+
+##old sampler used for backward compatibility
+## suppressWarnings() can be used so that the above warning is not displayed
+set.seed(42, kind = "Mersenne-Twister", normal.kind = "Inversion")
+n <- 2000
+knapsack_objects <-
+  data.frame(
+    w=sample(1:4000, size = n, replace = TRUE),
+    v=runif(n = n, 0, 10000)
+  )
+#' 
+#' 
 greedy_knapsack <-function(x, W, fast=FALSE){
   
   # check input data types

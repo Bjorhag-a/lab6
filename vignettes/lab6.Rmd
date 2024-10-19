@@ -20,6 +20,8 @@ library(lab6)
 ```
 
 ## Data for the lab 
+The data used in this vignette consists of a simulated dataset with items with randomly assigned weights and values.
+This dataset includes 2000 items total, variable w that representing the weight and sampled randomly between 1 and 4000, and the variable v that represent the value of the items (drawn from a uniform distribution ranging from 0 to 10,000). The dataset was generated using the following code:
 
 ```{r setup}
 RNGversion(min(as.character(getRversion()),"3.5.3"))
@@ -38,13 +40,13 @@ knapsack_objects <-
 ## Brute Force Knapsack
 Question: How much time does it takes to run the algorithm for n = 16 objects?
 ```{r}
-brute_force_knapsack(knapsack_objects[1:16, ], W = ????)
+system.time(brute_force_knapsack(knapsack_objects[1:16, ], W = ????))
 ```
 
 ## Dynamic Knapsack
 Question: How much time does it takes to run the algorithm for n = 500 objects?
 ```{r}
-knapsack_dynamic(knapsack_objects[1:500, ], W = ????)
+system.time(knapsack_dynamic(knapsack_objects[1:500, ], W = ????))
 ```
 
 
@@ -53,6 +55,6 @@ knapsack_dynamic(knapsack_objects[1:500, ], W = ????)
 Question: How much time does it takes to run the algorithm for n = 1000000 objects?
 ```{r}
 Change the function to the greedy and need to change the data to 1000000 object 
-knapsack_dynamic(knapsack_objects[1:1000000, ], W = ????)
+system.time(knapsack_dynamic(knapsack_objects[1:1000000, ], W = ????))
 ```
 
