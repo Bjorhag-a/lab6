@@ -21,15 +21,15 @@ library(lab6)
 
 ## Data for the lab 
 The data used in this vignette consists of a simulated dataset with items with randomly assigned weights and values.
-This dataset includes 2000 items total, variable w that representing the weight and sampled randomly between 1 and 4000, and the variable v that represent the value of the items (drawn from a uniform distribution ranging from 0 to 10,000). The dataset was generated using the following code:
+This dataset includes 1000000 items total, variable w that representing the weight and sampled randomly between 1 and 4000, and the variable v that represent the value of the items (drawn from a uniform distribution ranging from 0 to 10,000). The dataset was generated using the following code:
 
-```{r setup}
+```{r}
 RNGversion(min(as.character(getRversion()),"3.5.3"))
 
 ##old sampler used for backward compatibility
 ## suppressWarnings() can be used so that the above warning is not displayed
 set.seed(42, kind = "Mersenne-Twister", normal.kind = "Inversion")
-n <- 2000
+n <- 1000000
 knapsack_objects <-
   data.frame(
     w=sample(1:4000, size = n, replace = TRUE),
@@ -40,13 +40,13 @@ knapsack_objects <-
 ## Brute Force Knapsack
 Question: How much time does it takes to run the algorithm for n = 16 objects?
 ```{r}
-system.time(brute_force_knapsack(knapsack_objects[1:16, ], W = ????))
+system.time(a <- brute_force_knapsack(knapsack_objects[1:16, ], W = 3500))
 ```
 
 ## Dynamic Knapsack
 Question: How much time does it takes to run the algorithm for n = 500 objects?
 ```{r}
-system.time(knapsack_dynamic(knapsack_objects[1:500, ], W = ????))
+system.time(a <- knapsack_dynamic(knapsack_objects[1:500, ], W = 3500))
 ```
 
 
@@ -54,7 +54,45 @@ system.time(knapsack_dynamic(knapsack_objects[1:500, ], W = ????))
 ## Greedy Heuristic Knapsack
 Question: How much time does it takes to run the algorithm for n = 1000000 objects?
 ```{r}
-Change the function to the greedy and need to change the data to 1000000 object 
-system.time(knapsack_dynamic(knapsack_objects[1:1000000, ], W = ????))
+system.time(a <- greedy_knapsack(knapsack_objects[1:1000000, ], W = 3500))
 ```
 
+
+## Performance comparison with optimized versions
+All three implementations have been checked for bottlenecks in the code. Based on 
+that the brute force and the dynamic algorithm were optimized using vectorisation 
+or the rcpp package respectively. The greedy approach does not have any bottlenecks,
+so it was not further optimized.
+### Comparison of brute force algorithms
+```{r}
+system.time(a <- brute_force_knapsack(knapsack_objects[1:16, ], W = 3500))
+system.time(a <- optimized_brute_force_knapsack(knapsack_objects[1:16, ], W = 3500))
+```
+
+### Comparison of dynamic algorithms
+```{r echo=FALSE, results='hide',message=FALSE}
+optimized_knapsack_dynamic(knapsack_objects[1:12, ], W = 3500)
+```
+```{r}
+system.time(a <- knapsack_dynamic(knapsack_objects[1:500, ], W = 3500))
+system.time(a <- optimized_knapsack_dynamic(knapsack_objects[1:500, ], W = 3500))
+```
+
+
+## Performance comparison with Rcpp implementations
+``` {r echo=FALSE, results='hide',message=FALSE}
+brute_force_knapsack(knapsack_objects[1:8,], W=3500, fast=TRUE)
+knapsack_dynamic(knapsack_objects[1:12, ], W = 3500, fast=TRUE)
+greedy_knapsack(knapsack_objects[1:500, ], W = 3500, fast=TRUE)
+```
+```{r}
+system.time(a <- brute_force_knapsack(knapsack_objects[1:16, ], W = 3500))
+system.time(a <- brute_force_knapsack(knapsack_objects[1:16, ], W = 3500, fast = TRUE))
+
+system.time(a <- knapsack_dynamic(knapsack_objects[1:500, ], W = 3500))
+system.time(a <- knapsack_dynamic(knapsack_objects[1:500, ], W = 3500, fast=TRUE))
+
+system.time(a <- greedy_knapsack(knapsack_objects[1:500, ], W = 3500))
+system.time(a <- greedy_knapsack(knapsack_objects[1:500, ], W = 3500, fast=TRUE))
+```
+The Rcpp implementation speeds up the brute force and dynamic algorithms, but does not have an effect on the greedy algorithm, sometimes it is even slower.

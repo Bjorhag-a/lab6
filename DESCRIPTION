@@ -1,18 +1,21 @@
 Package: lab6
 Type: Package
-Title: What the Package Does (Short Line)
+Title: Lab 6
 Version: 1.0
 Date: 2024-10-15
 Author: Björhag, Alexander; Lindner, Jakob
 Maintainer: <alebj452@student.liu.se>, <jakli758@student.liu.se>
 Description: Assignment for lab 6 in Advanced R programming.
 License: GPL-3 + file LICENSE
+Encoding: UTF-8
 Depends: 
-    R (>= 3.5.0)
+    R (>= 3.5.0),
+    Rcpp
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    profvis
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
