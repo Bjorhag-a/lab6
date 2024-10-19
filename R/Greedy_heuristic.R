@@ -10,7 +10,7 @@ knapsack_objects <-
     v=runif(n = n, 0, 10000)
   )
 
-
+library("Rcpp")
 
 greedy_knapsack <-function(x, W, fast=FALSE){
   
@@ -50,7 +50,45 @@ greedy_knapsack <-function(x, W, fast=FALSE){
   }
   
   else {
+    cppFunction('
+      List knapsackCpp(NumericVector v, NumericVector w, int W){
+        int n = v.size();
     
+        std::vector<std::pair<double, int>> val_per_w(n);
+        
+        for (int i = 0; i < n; i++) {
+          val_per_w[i] = std::make_pair(v[i] / w[i], i);
+        }
+        
+        std::sort(val_per_w.begin(), val_per_w.end(), std::greater<std::pair<double, int>>());
+        
+        double total_v = 0.0;
+        double total_w = 0.0;
+        std::vector<int> elements;
+        
+        for (int i = 0; i < n; i++) {
+          int idx = val_per_w[i].second; 
+          
+          if (total_w + w[idx] < W) {
+            total_v += v[idx];
+            total_w += w[idx];
+            elements.push_back(idx + 1);  
+          } else {
+            break;
+          }
+        }
+        return List::create(
+          Named("total_value") = total_v,
+          Named("total_weight") = total_w,
+          Named("elements") = elements
+        );
+      }           
+    ')
+    
+    result <- knapsackCpp(v, w, W)
+    
+    total_v <- result$total_value
+    elements <- result$elements
   }
   
   
@@ -60,14 +98,15 @@ greedy_knapsack <-function(x, W, fast=FALSE){
   
 }
 
-system.time(gk <- greedy_knapsack(x = knapsack_objects[1:16,], W = 2000))
+system.time(gk <- greedy_knapsack(x = knapsack_objects[1:800,], W = 3500))
+system.time(gk <- greedy_knapsack(x = knapsack_objects[1:800,], W = 3500, fast = TRUE))
 
 greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
 greedy_knapsack(x = knapsack_objects[1:1200,], W = 2000)
 greedy_knapsack(x = knapsack_objects[1:8,], W = 3500)
 
 
-
+greedy_knapsack(x = knapsack_objects[1:800,], W = 3500, fast = TRUE)
 
 
 
